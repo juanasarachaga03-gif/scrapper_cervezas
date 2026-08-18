@@ -678,6 +678,7 @@ def run_full_scraper_automation():
     
     # 2. Orden final de columnas deseado
     final_column_order = [
+        'Tipo de Cadena',
         'Fecha extracción',
         'Cadena',
         'Sucursal',
@@ -696,7 +697,7 @@ def run_full_scraper_automation():
         'Promoción Desc Anterior'
 
     ]
-
+    df_final_unificado['Tipo de Cadena'] = 'Cadena Nacional'
     # 3. Crear el DataFrame para Excel
     columnas_disponibles_en_excel = [col for col in final_column_order if col in df_final_unificado.columns]
     df_excel_final = df_final_unificado[columnas_disponibles_en_excel]
