@@ -22,4 +22,4 @@ jobs:
           pip install pandas requests openpyxl urllib3
 
       - name: Ejecutar scraper
-        run: python main.py
+        run: python script.py
