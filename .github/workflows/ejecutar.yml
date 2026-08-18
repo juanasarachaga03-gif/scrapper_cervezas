@@ -26,9 +26,14 @@ jobs:
       - name: Ejecutar scraper
         run: python script.py
 
-      # Esto crea el botón de descarga del Excel generado
-      - name: Preparar archivo para descargar
+      - name: Separar solo el Excel nuevo del día
+        run: |
+          mkdir -p descargas
+          # Detecta los archivos nuevos o modificados por el script y los copia a la carpeta descargas
+          git status --porcelain | awk '{print $2}' | grep '\.xlsx$' | xargs -I {} cp {} descargas/ || true
+
+      - name: Preparar descarga
         uses: actions/upload-artifact@v4
         with:
           name: Reporte-del-dia
-          path: "*.xlsx"
+          path: descargas/*.xlsx
