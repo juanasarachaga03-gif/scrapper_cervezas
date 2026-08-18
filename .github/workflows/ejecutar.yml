@@ -26,13 +26,8 @@ jobs:
       - name: Ejecutar scraper
         run: python script.py
 
-      - name: Separar solo el Excel nuevo del día
-        run: |
-          mkdir -p descargas
-          cp *.xlsx descargas/ 2>/dev/null || true
-
-      - name: Preparar descarga
+      - name: Preparar descarga del reporte diario
         uses: actions/upload-artifact@v4
         with:
           name: Reporte-del-dia
-          path: descargas/*.xlsx
+          path: Reporte_cervezas_*.xlsx
