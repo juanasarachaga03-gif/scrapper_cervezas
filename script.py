@@ -20,16 +20,8 @@ PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 SUCURSALES_FILE_PATH = os.path.join(PROJECT_PATH, 'Maestros2.xlsx')
 MODULOS_PATH = os.path.join(PROJECT_PATH, 'Codigos')
-HISTORY_FILE = os.path.join(PROJECT_PATH, 'historico.parquet')
-OUTPUT_FOLDER = r"C:\Users\29036436\OneDrive - Anheuser-Busch InBev\Desktop\Proyecto Comercial\scraper_cervezas\Analisis Scrapper\Reportes diarios"
-# RUTA CORREGIDA: Archivo Maestro de Sucursales (dentro de \Automatico)
-SUCURSALES_FILE_PATH = os.path.join(PROJECT_PATH, 'Maestros2.xlsx')
-# RUTA CORREGIDA: Carpeta de Módulos de Código (donde están todos los archivos API)
-MODULOS_PATH = os.path.join(PROJECT_PATH, r'Codigos')
-
-# Nombre del archivo histórico (AJUSTADO PARA NABs + CZA)
-HISTORY_FILE = 'scraper_historical_data_NABs_CZA.parquet' 
-
+HISTORY_FILE = os.path.join(PROJECT_PATH, 'scraper_historical_data_NABs_CZA.parquet')
+OUTPUT_FOLDER = PROJECT_PATH
 # Configuración de Email SMTP (usaremos Gmail)
 SMTP_SERVER = None
 # CORRECCIÓN: Puerto 465 (SSL) en lugar de 587 (TLS), para evitar bloqueos
