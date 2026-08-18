@@ -1,9 +1,9 @@
 name: Ejecutar Scraper de Cervezas
 
 on:
-  workflow_dispatch: # Botón manual
+  workflow_dispatch:
   schedule:
-    - cron: '0 11 * * *' # Corre automático a las 08:00 AM (Argentina)
+    - cron: '0 11 * * *'
 
 jobs:
   scraping:
@@ -21,7 +21,7 @@ jobs:
       - name: Instalar librerías
         run: |
           python -m pip install --upgrade pip
-          pip install pandas requests openpyxl urllib3
+          pip install pandas requests openpyxl urllib3 pyarrow fastparquet xlsxwriter
 
       - name: Ejecutar scraper
         run: python script.py
@@ -29,15 +29,10 @@ jobs:
       - name: Separar solo el Excel nuevo del día
         run: |
           mkdir -p descargas
-          # Detecta los archivos nuevos o modificados por el script y los copia a la carpeta descargas
-          git status --porcelain | awk '{print $2}' | grep '\.xlsx$' | xargs -I {} cp {} descargas/ || true
+          cp *.xlsx descargas/ 2>/dev/null || true
 
       - name: Preparar descarga
         uses: actions/upload-artifact@v4
         with:
           name: Reporte-del-dia
           path: descargas/*.xlsx
-      - name: Instalar librerías
-        run: |
-            python -m pip install --upgrade pip
-            pip install pandas requests openpyxl urllib3 pyarrow fastparquet xlsxwriter
