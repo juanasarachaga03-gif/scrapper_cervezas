@@ -1,19 +1,25 @@
-name: Ejecutar mi script
+name: Ejecutar Scraper de Cervezas
 
 on:
-  workflow_dispatch: # Botón para correrlo a mano cuando quieras
+  workflow_dispatch: # Botón para ejecutar manualmente cuando quieras
 
 jobs:
-  correr:
+  scraping:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Descargar codigo
+      - name: Descargar repositorio y archivos
         uses: actions/checkout@v4
 
-      - name: Instalar Python
+      - name: Configurar Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Correr script
-        run: python script.py
+      - name: Instalar librerías
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas requests openpyxl urllib3
+
+      - name: Ejecutar scraper
+        run: python main.py
