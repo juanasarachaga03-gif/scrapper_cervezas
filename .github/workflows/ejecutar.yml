@@ -1,0 +1,19 @@
+name: Ejecutar mi script
+
+on:
+  workflow_dispatch: # Botón para correrlo a mano cuando quieras
+
+jobs:
+  correr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Correr script
+        run: python script.py
