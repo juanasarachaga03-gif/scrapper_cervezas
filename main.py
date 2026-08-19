@@ -21,6 +21,7 @@ df_atomo = scrape_atomo()
 
 print("🍺 La Gallega...")
 df_lagallega = scrape_lagallega()
+
 print("🍺 Super Mami...")
 df_supermami = scrape_supermami()
 print("🍺 La reina...")
