@@ -110,7 +110,17 @@ df_export = pd.DataFrame()
 df_export["Tipo de Cadena"] = ["Cadena Interior"] * len(df_final)
 df_export["Fecha extracción"] = df_final["fecha_scraping"]
 df_export["Cadena"] = df_final["cadena"]
-df_export["Sucursal"] = ""
+sucursal = {
+"Depot": "Depot",
+"Cordiez": "Cordiez",
+"Atomo": "Atomo",
+"La Gallega": "La Gallega",
+"La Reina": "La Reina",
+"Super Mami": "Super Mami",
+"TOP": "TOP"
+}
+df_export["Sucursal"] = df_export["Cadena"].map(sucursal)
+
 nodos = {
 "Depot": "CZA - SMK - 13 - DI NEA",
 "Cordiez": "CZA - SMK - 10 - SGO - CAT - CENTRAL",
