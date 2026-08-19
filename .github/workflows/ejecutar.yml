@@ -24,16 +24,16 @@ jobs:
           pip install pandas requests openpyxl urllib3 pyarrow fastparquet xlsxwriter beautifulsoup4 lxml
 
       - name: Ejecutar Scraper Cervezas
-        run: python script_cervezas.py
+        run: python script.py
 
       - name: Ejecutar Scraper Interior
-        run: python main_interior.py
+        run: python main.py
 
       - name: Crear carpeta unificada de descarga
         run: |
           mkdir -p reportes_finales
-          # Copia todos los reportes generados por ambos scripts
           cp Reporte_*.xlsx reportes_finales/ 2>/dev/null || true
+          cp *.xlsx reportes_finales/ 2>/dev/null || true
 
       - name: Preparar descarga unificada
         uses: actions/upload-artifact@v4
