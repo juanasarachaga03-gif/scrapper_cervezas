@@ -134,9 +134,11 @@ df_export["Precio Fleje Ant"] = ""
 df_export["Promoción Desc Anterior"] = ""
 
 # EXPORTAR ESTE DATAFRAME
+
 df_export.to_excel(
-archivo,
-index=False
+    archivo,
+    sheet_name="Resultados",
+    index=False
 )
 
 print(f"📦 Depot: {len(df_depot)}")
