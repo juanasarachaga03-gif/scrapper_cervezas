@@ -1,0 +1,179 @@
+import requests
+import pandas as pd
+import re
+import os
+from bs4 import BeautifulSoup
+from datetime import datetime
+
+
+def limpiar_precio(texto):
+
+    if not texto:
+        return None
+
+    texto = (
+        texto.replace("$", "")
+        .replace(".", "")
+        .replace(",", ".")
+        .strip()
+    )
+
+    try:
+        return float(texto)
+    except:
+        return None
+
+
+def scrape_lagallega():
+
+    productos = []
+    vistos = set()
+
+    for pagina in range(1, 7):
+
+        if pagina == 1:
+
+            url = (
+                "https://www.lagallega.com.ar/"
+                "productosnl.asp?nl=07010000&TM=cx&categoria=bebidas/cervezas"
+            )
+
+        else:
+
+            url = (
+                "https://www.lagallega.com.ar/"
+                f"productosnl.asp?pg={pagina}&nl=07010000"
+            )
+
+        print(f"\n📄 Página {pagina}")
+
+        response = requests.get(
+            url,
+            headers={
+                "User-Agent": "Mozilla/5.0"
+            },
+            timeout=30
+        )
+
+        soup = BeautifulSoup(
+            response.text,
+            "html.parser"
+        )
+
+        cards = soup.select("li.cuadProd")
+
+        print(f"✅ Productos encontrados: {len(cards)}")
+
+        for card in cards:
+
+            try:
+
+                link = card.select_one(
+                    "a[href*='productosdet.asp']"
+                )
+
+                if not link:
+                    continue
+
+                href = link.get("href")
+
+                nombre_tag = card.select_one("div.desc")
+
+                nombre = (
+                    nombre_tag.get_text(strip=True)
+                    if nombre_tag
+                    else None
+                )
+
+                precio_tag = card.select_one("div.precio")
+
+                precio = None
+
+                if precio_tag:
+                    precio = limpiar_precio(
+                        precio_tag.get_text(strip=True)
+                    )
+
+                # EAN
+                ean = None
+
+                img = card.select_one("img")
+
+                if img:
+
+                    alt = img.get("alt", "")
+
+                    ean_match = re.search(
+                        r"(779\d{10})",
+                        alt
+                    )
+
+                    if ean_match:
+                        ean = ean_match.group(1)
+
+                url_producto = (
+                    "https://www.lagallega.com.ar/"
+                    + href.lstrip("/")
+                )
+
+                clave = f"{ean}_{nombre}"
+
+                if clave in vistos:
+                    continue
+
+                vistos.add(clave)
+
+                productos.append({
+
+                    "cadena": "La Gallega",
+
+                    "fecha_scraping":
+                        datetime.now().strftime("%Y-%m-%d"),
+
+                    "ean":
+                        ean,
+
+                    "nombre":
+                        nombre,
+
+                    "precio_oferta":
+                        precio,
+
+                    "url":
+                        url_producto
+
+                })
+
+            except Exception as e:
+                print(f"⚠️ Error: {e}")
+
+    return pd.DataFrame(productos)
+
+
+if __name__ == "__main__":
+
+    df = scrape_lagallega()
+
+    output_dir = os.path.join(
+        os.path.dirname(os.path.dirname(__file__)),
+        "Output"
+    )
+
+    os.makedirs(output_dir, exist_ok=True)
+
+    archivo = os.path.join(
+        output_dir,
+        "cervezas_lagallega.xlsx"
+    )
+
+    df.to_excel(
+        archivo,
+        index=False
+    )
+
+    print("\n====================")
+    print(df.head())
+    print("====================")
+
+    print(f"\n📦 Total productos: {len(df)}")
+    print(f"✅ Excel generado: {archivo}")
