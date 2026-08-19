@@ -705,7 +705,7 @@ def run_full_scraper_automation():
     # Generamos los bytes del Excel a partir del DataFrame recién formateado
     excel_bytes = to_excel_bytes(df_excel_final)
     # --- GUARDAR ARCHIVO LOCAL ---
-    output_file = os.path.join(OUTPUT_FOLDER, f"Reporte_cervezas_{datetime.now().strftime('%d-%m-%Y')}.xlsx")
+    output_file = os.path.join(OUTPUT_FOLDER, f"Reporte_Cadenas_Nacionales{datetime.now().strftime('%d-%m-%Y')}.xlsx")
     with open(output_file, "wb") as f:
         f.write(excel_bytes)
     log_message(f"📁 Archivo guardado en: {output_file}")
