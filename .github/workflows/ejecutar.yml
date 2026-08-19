@@ -1,9 +1,9 @@
-name: Ejecutar Scraper de Cervezas
+name: Ejecutar Scrapers Diarios
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 11 * * *'
+    - cron: '0 11 * * *' # 08:00 AM Argentina
 
 jobs:
   scraping:
@@ -21,13 +21,22 @@ jobs:
       - name: Instalar librerías
         run: |
           python -m pip install --upgrade pip
-          pip install pandas requests openpyxl urllib3 pyarrow fastparquet xlsxwriter
+          pip install pandas requests openpyxl urllib3 pyarrow fastparquet xlsxwriter beautifulsoup4 lxml
 
-      - name: Ejecutar scraper
-        run: python script.py
+      - name: Ejecutar Scraper Cervezas
+        run: python script_cervezas.py
 
-      - name: Preparar descarga del reporte diario
+      - name: Ejecutar Scraper Interior
+        run: python main_interior.py
+
+      - name: Crear carpeta unificada de descarga
+        run: |
+          mkdir -p reportes_finales
+          # Copia todos los reportes generados por ambos scripts
+          cp Reporte_*.xlsx reportes_finales/ 2>/dev/null || true
+
+      - name: Preparar descarga unificada
         uses: actions/upload-artifact@v4
         with:
-          name: Reporte-del-dia
-          path: Reporte_cervezas_*.xlsx
+          name: Reportes-Del-Dia
+          path: reportes_finales/*.xlsx
