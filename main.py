@@ -68,14 +68,9 @@ os.makedirs(output_dir, exist_ok=True)
 
 from datetime import datetime
 fecha_archivo = datetime.now().strftime("%Y-%m-%d")
-
-from datetime import datetime
-
-fecha_archivo = datetime.now().strftime("%Y%m%d_%H%M")
-
 archivo = os.path.join(
     output_dir,
-    f"cervezas_consolidado_{fecha_archivo}.xlsx"
+    f"Reporte_Cervezas_Interior_{fecha_archivo}.xlsx"
 )
 columnas = [
     "fecha_scraping",
