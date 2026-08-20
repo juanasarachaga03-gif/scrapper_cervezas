@@ -20,7 +20,11 @@ print("🍺 Atomo...")
 df_atomo = scrape_atomo()
 
 print("🍺 La Gallega...")
-df_lagallega = scrape_lagallega()
+try:
+    df_lagallega = scrape_lagallega()
+except Exception as e:
+    print(f"⚠️ La Gallega no respondió (bloqueo/timeout): {e}")
+    df_lagallega = pd.DataFrame()
 
 print("🍺 Super Mami...")
 df_supermami = scrape_supermami()
