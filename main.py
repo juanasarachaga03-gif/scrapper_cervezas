@@ -8,30 +8,57 @@ from APIs.lagallega_api import scrape_lagallega
 from APIs.supermami_api import scrape_supermami
 from APIs.lareina_api import scrape_lareina
 from APIs.top_api import scrape_top
-print("🚀 Iniciando scraping completo...\n")
+# --- EJECUCIÓN DE SCRAPERS CON MANEJO DE ERRORES ---
 
-print("🍺 Depot...")
-df_depot = scrape_depot()
+# 1. Depot
+try:
+    df_depot = scrape_depot()
+except Exception as e:
+    print(f"⚠️ Error/Timeout en Depot: {e}")
+    df_depot = pd.DataFrame()
 
-print("🍺 Cordiez...")
-df_cordiez = scrape_cordiez()
+# 2. Cordiez
+try:
+    df_cordiez = scrape_cordiez()
+except Exception as e:
+    print(f"⚠️ Error/Timeout en Cordiez: {e}")
+    df_cordiez = pd.DataFrame()
 
-print("🍺 Atomo...")
-df_atomo = scrape_atomo()
+# 3. Atomo
+try:
+    df_atomo = scrape_atomo()
+except Exception as e:
+    print(f"⚠️ Error/Timeout en Atomo: {e}")
+    df_atomo = pd.DataFrame()
 
-print("🍺 La Gallega...")
+# 4. La Gallega
 try:
     df_lagallega = scrape_lagallega()
 except Exception as e:
-    print(f"⚠️ La Gallega no respondió (bloqueo/timeout): {e}")
+    print(f"⚠️ Error/Timeout en La Gallega: {e}")
     df_lagallega = pd.DataFrame()
 
-print("🍺 Super Mami...")
-df_supermami = scrape_supermami()
-print("🍺 La reina...")
-df_lareina = scrape_lareina()
-print("🍺 TOP...")
-df_top = scrape_top()
+# 5. Super Mami
+try:
+    df_supermami = scrape_supermami()
+except Exception as e:
+    print(f"⚠️ Error/Timeout en Super Mami: {e}")
+    df_supermami = pd.DataFrame()
+
+# 6. La Reina
+try:
+    df_lareina = scrape_lareina()
+except Exception as e:
+    print(f"⚠️ Error/Timeout en La Reina: {e}")
+    df_lareina = pd.DataFrame()
+
+# 7. Top
+try:
+    df_top = scrape_top()
+except Exception as e:
+    print(f"⚠️ Error/Timeout en Top: {e}")
+    df_top = pd.DataFrame()
+
 # Normalizar precios
 
 if "precio" in df_depot.columns:
