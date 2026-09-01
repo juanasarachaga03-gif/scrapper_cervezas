@@ -70,7 +70,8 @@ if "precio" in df_atomo.columns:
 if "precio" in df_lagallega.columns:
     df_lagallega["precio_oferta"] = df_lagallega["precio"]
 
-df_depot = df_depot[df_depot["stock"] == True]
+if not df_depot.empty and "stock" in df_depot.columns:
+    df_depot = df_depot[df_depot["stock"] == True]
 df_cordiez = df_cordiez[df_cordiez["stock"] == True]
 # Normalizar precios
 
