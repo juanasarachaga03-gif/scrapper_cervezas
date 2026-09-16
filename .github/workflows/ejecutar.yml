@@ -21,13 +21,23 @@ jobs:
       - name: Instalar librerías
         run: |
           python -m pip install --upgrade pip
-          pip install pandas requests openpyxl urllib3 pyarrow fastparquet xlsxwriter beautifulsoup4 lxml
+          pip install pandas requests openpyxl urllib3 pyarrow fastparquet xlsxwriter beautifulsoup4 lxml playwright
+
+      - name: Instalar navegador de Playwright (para Rappi)
+        run: python -m playwright install --with-deps chromium
 
       - name: Ejecutar Scraper Cervezas
         run: python script.py
 
       - name: Ejecutar Scraper Interior
         run: python main.py
+
+      - name: Ejecutar Last Millers (PedidosYa + Rappi)
+        # No corta el workflow si falla: PedidosYa puede bloquear la IP de
+        # datacenter de GitHub Actions (igual que le pasa a pedidosya-nunez).
+        # Si falla, los reportes de Cadenas Nacionales / Interior salen igual.
+        continue-on-error: true
+        run: python last_millers.py
 
       - name: Crear carpeta unificada de descarga
         run: |
