@@ -6,6 +6,11 @@ name: Publicar historico de reportes en Releases (manual)
 # Release "reportes-AAAA-MM-DD", para que se puedan bajar sin login.
 
 on:
+  # Corre solo cuando se modifica este mismo archivo (usa la fecha por defecto)
+  # y se puede volver a correr a mano con otra fecha. Es idempotente.
+  push:
+    paths:
+      - '.github/workflows/publicar_historico.yml'
   workflow_dispatch:
     inputs:
       desde:
@@ -23,7 +28,7 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
-      DESDE: ${{ inputs.desde }}
+      DESDE: ${{ inputs.desde || '2026-09-26' }}
     steps:
       - name: Validar fecha
         run: |
@@ -53,6 +58,11 @@ jobs:
             rm -rf "dl/$dia"
             mkdir -p "dl/$dia"
             gh run download "$run_id" -n Reportes-Del-Dia -D "dl/$dia"
+            mapfile -t archivos < <(find "dl/$dia" -name 'Reporte_*.xlsx')
+            if [ "${#archivos[@]}" -eq 0 ]; then
+              echo "AVISO: la corrida $run_id no trae Reporte_*.xlsx, se saltea $dia"
+              continue
+            fi
             TAG="reportes-$dia"
             if ! gh release view "$TAG" >/dev/null 2>&1; then
               gh release create "$TAG" \
@@ -60,5 +70,5 @@ jobs:
                 --notes "Reportes diarios del $dia (publicados desde el historial de Actions)." \
                 --latest=false
             fi
-            gh release upload "$TAG" dl/"$dia"/Reporte_*.xlsx --clobber
+            gh release upload "$TAG" "${archivos[@]}" --clobber
           done < dias.tsv
