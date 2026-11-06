@@ -5,6 +5,9 @@ on:
   schedule:
     - cron: '0 11 * * *' # 08:00 AM Argentina
 
+permissions:
+  contents: write # necesario para publicar los reportes en Releases
+
 jobs:
   scraping:
     runs-on: ubuntu-latest
@@ -50,3 +53,19 @@ jobs:
         with:
           name: Reportes-Del-Dia
           path: reportes_finales/*.xlsx
+
+      # Los artifacts solo se pueden bajar con login de GitHub. En Releases
+      # cualquiera descarga los archivos sin cuenta (el repo es público).
+      - name: Publicar reportes en Releases (descarga pública, sin login)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          FECHA=$(TZ=America/Argentina/Buenos_Aires date +%Y-%m-%d)
+          TAG="reportes-$FECHA"
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            gh release create "$TAG" \
+              --title "Reportes $FECHA" \
+              --notes "Reportes diarios generados automáticamente (Cadenas Nacionales, Cadena Interior y Last Millers)."
+          fi
+          gh release upload "$TAG" Reporte_*.xlsx --clobber
